@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<title>Chipotle Reviews</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBfc-t-F-mj7a5WmFUObXA1NzNLWxTiq1Q&libraries=places&callback=initAutocomplete" async defer></script>
+<script>
+  var map;
+  var markers = [];
+
+  function initAutocomplete() {
+    map = new google.maps.Map(document.getElementById('map'), {
+      center: {
+        lat: -34.397,
+        lng: 150.644
+      },
+      zoom: 8
+    });
+    var searchBox = new google.maps.places.SearchBox(document.getElementById("zip"));
+    map.addListener('bounds_changed', function() {
+      searchBox.setBounds(map.getBounds());
+    });
+    markers = [];
+    searchBox.addListener('places_changed', function() {
+      var places = searchBox.getPlaces();
+      if (places.length == 0)
+        return;
+      markers.forEach(function(marker) {
+        marker.setMap(null);
+      });
+      markers = [];
+      var bounds = new google.maps.LatLngBounds();
+      places.forEach(function(place) {
+        if (!place.geometry) {
+          console.log("Returned place contains no geometry");
+          return;
+        }
+        var markert = new google.maps.Marker({
+          map: map,
+          title: place.name,
+          position: place.geometry.location
+        });
+        markert.addListener('click', function() {
+
+        });
+        markers.push(markert);
+        if (place.geometry.viewport)
+          bounds.union(place.geometry.viewport);
+        else
+          bounds.extend(place.geometry.location);
+      });
+      map.fitBounds(bounds);
+    });
+  }
+</script>
+<style>
+  body,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    font-family: "Raleway", sans-serif;
+  }
+  
+  #map {
+    height: 500px;
+    width: 100%;
+  }
+</style>
+
+<body>
+  <header>
+    <h1><b>Chipotle Reviews</b></h1>
+  </header>
+  <br>
+  <img src="chip.jpg" alt="Nature" style="width:100%">
+  <br>Please enter your zipcode:
+  <input type="zip" name="zip" id="zip" value="chipotle " />
+  <p>
+    <div id="map"></div>
+  </p>
+  <h4><b>About Chipotle</b></h4>
+  <p>Chipotle Mexican Grill, Inc.is a chain of fast casual restaurants specializing in tacos and burritos. The company has released a mission statement called Food with Integrity, which highlights its efforts in using naturally-grown ingredients, and serves
+    more naturally raised meat than any other restaurant chain. </p>
+  <hr>
+  <h4>Popular Reviews</h4>
+  <ul>
+    <li>
+      <span>Cleanliness: </span><input type="text" name="" />
+    </li>
+    <li>
+      <span>Food Quality: </span><input type="text" name="" />
+    </li>
+    <li>
+      <span>Customer Service: </span><input type="text" name="" />
+    </li>
+  </ul>
+  <hr>
+  <div>Please Enter A Review: </div>
+  <h6>Please take your time to write a thoughtful review which describes the food quality, customer service, and cleanliness of ONLY the location at which you were served. Making generic statements regarding the chain defeats the purpose of your review. Thank
+    you! :)</h6>
+  <br>
+  <form action="./ChipDatabase.php" method="get">
+    Full Name:
+    <input type="text" name="firstname" placeholder="Johnny Appleseed">
+    <br><br>Email:
+    <input type="text" name="lastname" placeholder="mapitio@mapitio.co">
+    <br><br>Review/Comments:
+    <input type="text" name="email" placeholder="This place is great!" size="100%" height="300" />
+    <p>
+      <input type="submit">
+      <p>
+  </form>
+</body>
+</html>
